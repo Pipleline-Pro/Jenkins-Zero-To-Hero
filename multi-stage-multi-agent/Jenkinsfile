@@ -6,7 +6,11 @@ pipeline {
         docker { image 'maven:3.8.1-adoptopenjdk-11' }
       }
       steps {
-        sh 'docker run -d --name my-maven maven:3.8.1-adoptopenjdk-11 tail -f /dev/null'
+        sh '''
+                docker pull maven:3.8.1-adoptopenjdk-11
+                docker run -d --name my-maven maven:3.8.1-adoptopenjdk-11 tail -f /dev/null
+                docker ps -a | grep my-maven
+                '''
       }
     }
     stage('Front-end') {
