@@ -8,13 +8,12 @@ pipeline {
                 docker { image 'maven:3.8.1-adoptopenjdk-11' }
             }
             steps {
-                // Navigate to review folder
                 dir('review') {
                     // Compile Java code
-                    sh 'mvn compile || javac HelloWorld.java'
+                    sh 'javac HelloWorld.java'
 
-                    // Run HelloWorld.java
-                    sh 'mvn exec:java -Dexec.mainClass="HelloWorld" || java HelloWorld'
+                    // Run Java code
+                    sh 'java HelloWorld'
                 }
             }
         }
@@ -25,11 +24,10 @@ pipeline {
             }
             steps {
                 dir('review/frontend') {
-                    // Run Node app (optional, will skip if not found)
-                    sh 'node app.js || echo "No frontend app found"'
+                    // Run Node app
+                    sh 'node app.js'
                 }
             }
         }
     }
 }
-
