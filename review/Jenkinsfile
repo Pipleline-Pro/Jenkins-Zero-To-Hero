@@ -1,1 +1,35 @@
+pipeline {
+    agent none
+
+    stages {
+
+        stage('Back-end: Java Build') {
+            agent {
+                docker { image 'maven:3.8.1-adoptopenjdk-11' }
+            }
+            steps {
+                // Navigate to review folder
+                dir('review') {
+                    // Compile Java code
+                    sh 'mvn compile || javac HelloWorld.java'
+
+                    // Run HelloWorld.java
+                    sh 'mvn exec:java -Dexec.mainClass="HelloWorld" || java HelloWorld'
+                }
+            }
+        }
+
+        stage('Front-end: Node.js') {
+            agent {
+                docker { image 'node:16-alpine' }
+            }
+            steps {
+                dir('review/frontend') {
+                    // Run Node app (optional, will skip if not found)
+                    sh 'node app.js || echo "No frontend app found"'
+                }
+            }
+        }
+    }
+}
 
